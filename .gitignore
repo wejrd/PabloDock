@@ -1,0 +1,19 @@
+# Build and publish output
+bin/
+obj/
+.vs/
+artifacts/
+publish/
+build/
+out/
+TestResults/
+**/Release*/
+**/Debug*/
+
+# Local IDE and user data
+*.user
+*.suo
+*.cache
+/Profiles/
+/settings.json
+/exclusions.json
