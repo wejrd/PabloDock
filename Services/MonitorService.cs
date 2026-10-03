@@ -48,11 +48,26 @@ public sealed class MonitorService
             throw new Win32Exception(Marshal.GetLastWin32Error(), "Could not read monitor information.");
         }
 
+        var device = new User32.DisplayDevice
+        {
+            Size = (uint)Marshal.SizeOf<User32.DisplayDevice>(),
+            DeviceName = string.Empty,
+            DeviceString = string.Empty,
+            DeviceId = string.Empty,
+            DeviceKey = string.Empty
+        };
+        var interfaceName = User32.EnumDisplayDevices(
+            info.DeviceName, 0, ref device, User32.EddGetDeviceInterfaceName)
+            ? device.DeviceId : null;
+
         return new CapturedMonitor(
             info.DeviceName,
             (info.Flags & User32.MonitorInfoPrimary) != 0,
             ToCaptureRect(info.Monitor),
-            ToCaptureRect(info.Work));
+            ToCaptureRect(info.Work))
+        {
+            DeviceInterfaceName = string.IsNullOrWhiteSpace(interfaceName) ? null : interfaceName
+        };
     }
 
     private static CaptureRect ToCaptureRect(User32.Rect rect) =>

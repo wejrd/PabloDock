@@ -9,9 +9,9 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Product>PabloDock</Product>
     <AssemblyName>PabloDock</AssemblyName>
-    <Version>0.1.0</Version>
-    <FileVersion>0.1.0.0</FileVersion>
-    <InformationalVersion>0.1.0</InformationalVersion>
+    <Version>0.1.1</Version>
+    <FileVersion>0.1.1.0</FileVersion>
+    <InformationalVersion>0.1.1</InformationalVersion>
     <ApplicationIcon>PabloDock.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

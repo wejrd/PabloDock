@@ -15,7 +15,10 @@ public sealed record CapturedMonitor(
     string DeviceName,
     bool IsPrimary,
     CaptureRect Bounds,
-    CaptureRect WorkingArea);
+    CaptureRect WorkingArea)
+{
+    public string? DeviceInterfaceName { get; init; }
+}
 
 public sealed record CapturedWindow(
     string ProcessName,

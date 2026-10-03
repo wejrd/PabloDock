@@ -246,9 +246,7 @@ public sealed class LayoutRestoreService : IDisposable
 
             foreach (var (saved, running) in resolution.Matches)
             {
-                var target = monitors.FirstOrDefault(monitor =>
-                    string.Equals(monitor.DeviceName, saved.Monitor.DeviceName,
-                        StringComparison.OrdinalIgnoreCase)) ?? primary;
+                var target = SelectTargetMonitor(saved.Monitor, monitors, primary);
 
                 try
                 {
@@ -263,6 +261,44 @@ public sealed class LayoutRestoreService : IDisposable
         }
 
         return new LayoutRestoreResult(restored, missing, ambiguous, failed);
+    }
+
+    private static CapturedMonitor SelectTargetMonitor(
+        CapturedMonitor saved, IReadOnlyList<CapturedMonitor> monitors, CapturedMonitor primary)
+    {
+        // Monitor interface names identify the physical display. GDI names
+        // such as DISPLAY1 can be reassigned after a display is powered off.
+        if (!string.IsNullOrWhiteSpace(saved.DeviceInterfaceName))
+        {
+            var byInterface = monitors.FirstOrDefault(monitor =>
+                string.Equals(monitor.DeviceInterfaceName, saved.DeviceInterfaceName,
+                    StringComparison.OrdinalIgnoreCase));
+            return byInterface ?? primary;
+        }
+
+        // Profiles captured before interface names were stored can still
+        // recognize a reassigned display when its desktop bounds are unique.
+        var byName = monitors.FirstOrDefault(monitor =>
+            string.Equals(monitor.DeviceName, saved.DeviceName,
+                StringComparison.OrdinalIgnoreCase));
+        var byBounds = monitors.Where(monitor => monitor.Bounds == saved.Bounds).ToArray();
+        if (byBounds.Length == 1 && (byName is null || byName.Bounds != saved.Bounds))
+        {
+            return byBounds[0];
+        }
+
+        // The screen can return at its old desktop origin with a different
+        // resolution. Use that unique position before a reassigned GDI name.
+        var byOrigin = monitors.Where(monitor =>
+            monitor.Bounds.X == saved.Bounds.X &&
+            monitor.Bounds.Y == saved.Bounds.Y).ToArray();
+        if (byOrigin.Length == 1 && (byName is null ||
+            byName.Bounds.X != saved.Bounds.X || byName.Bounds.Y != saved.Bounds.Y))
+        {
+            return byOrigin[0];
+        }
+
+        return byName ?? primary;
     }
 
     private void RestoreWindow(

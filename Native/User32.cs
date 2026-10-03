@@ -10,6 +10,7 @@ internal static class User32
     internal const long WsExAppWindow = 0x00040000;
     internal const uint MonitorDefaultToNearest = 2;
     internal const uint MonitorInfoPrimary = 1;
+    internal const uint EddGetDeviceInterfaceName = 0x00000001;
     internal const uint SwShowNormal = 1;
     internal const uint SwShowMinimized = 2;
     internal const uint SwShowMaximized = 3;
@@ -75,6 +76,26 @@ internal static class User32
         internal string DeviceName;
     }
 
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    internal struct DisplayDevice
+    {
+        internal uint Size;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        internal string DeviceName;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        internal string DeviceString;
+
+        internal uint StateFlags;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        internal string DeviceId;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        internal string DeviceKey;
+    }
+
 
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -135,6 +156,11 @@ internal static class User32
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool EnumDisplayMonitors(
         nint hdc, nint clipRect, MonitorEnumProc callback, nint data);
+
+    [DllImport("user32.dll", EntryPoint = "EnumDisplayDevicesW", CharSet = CharSet.Unicode)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool EnumDisplayDevices(
+        string deviceName, uint deviceNumber, ref DisplayDevice displayDevice, uint flags);
 
     [DllImport("user32.dll")]
     internal static extern uint GetDpiForWindow(nint hWnd);
