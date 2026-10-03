@@ -1,6 +1,34 @@
 # PabloDock
 
-PabloDock is a lightweight Windows 11 desktop app for saving and restoring multi-monitor window layouts. This is an early 0.1.0 release.
+PabloDock is a small, lightweight Windows 11 utility for saving and restoring multi-monitor window layouts. This is an early release.
+
+## Why PabloDock?
+
+PabloDock started because a friend uses a four-monitor setup with mostly the same applications in the same places every day. Manually arranging Discord, Spotify, browsers, and other windows after startup became repetitive. PabloDock solves that with saved workspace profiles, one-click or keybind restore, automatic launching of missing apps, and multi-monitor support.
+
+It is designed to stay quietly in the system tray. The goal is effectively idle CPU use when no work is running. During testing, memory use has typically been around 20–40 MB; actual usage varies by system and workload.
+
+## Demo
+
+![PabloDock restore demo](docs/demo/demo.gif)
+
+## Screenshots
+
+### Main window
+
+![PabloDock main window](docs/screenshots/main.png)
+
+### Profile management
+
+![PabloDock profile management](docs/screenshots/profiles.png)
+
+### Global exclusions
+
+![PabloDock exclusions](docs/screenshots/exclusion.png)
+
+### Lightweight when idle
+
+![PabloDock memory usage](docs/screenshots/memory.png)
 
 ## Features
 
@@ -19,7 +47,7 @@ Profiles are stored as JSON under `%LOCALAPPDATA%\PabloDock\Profiles`.
 
 ## Download
 
-For normal use, download the latest Windows x64 binary from this repository's **GitHub Releases** page instead of cloning the source repository. The release build includes .NET, so a separate .NET installation is not needed.
+For normal use, download the latest Windows x64 binary from [GitHub Releases](https://github.com/wejrd/PabloDock/releases) instead of cloning the source repository. The release build includes .NET, so a separate .NET installation is not needed.
 
 ## Build from source
 
